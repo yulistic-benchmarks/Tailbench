@@ -26,9 +26,21 @@ class Lat(object):
     def parseSojournTimes(self):
         return self.reqTimes[:, 2]
 
-def draw_pdf(values, nbins):
+def draw_histo(values, nbins):
     clear()
-    return pd.Series(values).hist(bins=nbins)
+
+    # CDF
+    # histtype='step' plots a wierd last entry at y=0.
+    # return pd.Series(values).hist(bins=nbins, cumulative=True, density=True, histtype='step')
+    ax = pd.Series(values).hist(bins=nbins, cumulative=True, density=True, histtype='stepfilled')
+
+    ax.set_ylim(0, 1)
+    ax.set_xlabel("ms")
+    ax.set_ylabel("")
+
+    # Histogram
+    # return pd.Series(values).hist(bins=nbins)
+
 
 def savefig(pathname):
     plt.savefig(pathname)
@@ -91,13 +103,11 @@ if __name__ == '__main__':
         print("end2end: mean %.3f ms | p95 %.3f ms | p99 %.3f ms | max %.3f ms" \
                 % (sjrn_mean, sjrn_p95, sjrn_p99, sjrn_maxLat))
 
-        
-        """
-        draw_pdf(svcTimes, 1000)
-        savefig("svcTimes.png")
-        draw_pdf(sjrnTimes, 1000)
-        savefig("sjrnTimes.png")
-        """
+        # Histogram (CDF)
+        draw_histo(svcTimes, 10000)
+        savefig("svcCDF.png")
+        draw_histo(sjrnTimes, 10000)
+        savefig("sjrnCDF.png")
 
     latsFile = sys.argv[1]
     getLatPct(latsFile)
