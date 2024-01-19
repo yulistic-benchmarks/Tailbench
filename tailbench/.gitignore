@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+lats.bin
+lats.txt
+*.png
+build.log
