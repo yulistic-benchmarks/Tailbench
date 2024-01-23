@@ -1,4 +1,7 @@
 #!/bin/bash
+set -v
+PINNING="numactl -N 0 -m 0"
+NTHREADS=16
 
 if [[ -z "${NTHREADS}" ]]; then NTHREADS=32; fi
 
@@ -7,5 +10,5 @@ MAXREQS=50000
 WARMUPREQS=14000
 
 TBENCH_QPS=${QPS} TBENCH_MAXREQS=${MAXREQS} TBENCH_WARMUPREQS=${WARMUPREQS} \
-    TBENCH_MINSLEEPNS=10000 ./mttest_integrated -j${NTHREADS} \
+    TBENCH_MINSLEEPNS=10000 ${PINNING} ./mttest_integrated -j${NTHREADS} \
     mycsba masstree
