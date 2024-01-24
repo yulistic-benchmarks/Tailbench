@@ -36,18 +36,18 @@ parseInputFile() {
 	outfile_name="$dir/${filename%.*}_sjrnLat.txt"
 
 	echo "Output file: $outfile_name"
+	rm -rf $outfile_name
 
 	line_cnt=0
 
-	# IFS= : preserves leading/trailing white space.
 	# -r   : prevents backspace escapes.
-	while IFS= read -r line; do
+	while read -r line; do
 		# Ignore first two lines.
 		if ((line_cnt < 2)); then
 			((line_cnt = line_cnt + 1))
 			continue
 		fi
-		echo "$line" | xargs | tr -d "|" | xargs | cut -d " " -f 3 >>"$outfile_name"
+		echo "$line" | cut -d "|" -f 3 | xargs >>"$outfile_name"
 		((line_cnt = line_cnt + 1))
 	done <"$input"
 
